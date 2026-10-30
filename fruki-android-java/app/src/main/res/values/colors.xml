@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta Fruki Bebidas -->
+    <color name="fruki_verde">#00A04A</color>
+    <color name="fruki_verde_escuro">#0B3B2C</color>
+    <color name="fruki_verde_medio">#1F7A4D</color>
+    <color name="fruki_verde_claro">#E5F5EC</color>
+    <color name="fruki_amarelo">#F2B705</color>
+    <color name="fruki_vermelho">#D7263D</color>
+    <color name="fruki_laranja">#E8742A</color>
+    <color name="fruki_azul">#3C7DD9</color>
+
+    <color name="fundo">#FFFFFF</color>
+    <color name="card">#F5F8F6</color>
+    <color name="borda">#E1E8E3</color>
+    <color name="texto">#1A2B22</color>
+    <color name="texto_mut">#5F6F66</color>
+    <color name="trilho">#E3EAE5</color>
+    <color name="whats_fundo">#ECE5DD</color>
+    <color name="whats_balao">#DCF8C6</color>
+</resources>

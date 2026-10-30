@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/raiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fundo"
+    android:orientation="vertical">
+
+    <!-- Barra superior -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_logo" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="Motor de recomendação"
+            android:textColor="@color/fruki_verde_escuro"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/rolagem"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="24dp">
+
+            <!-- Vendedor -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_inner"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="14dp"
+                android:paddingEnd="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vendedor"
+                    android:textColor="@color/texto_mut" />
+
+                <Spinner
+                    android:id="@+id/spVendedor"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <!-- Indicadores do motor -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/kpiClientes"
+                    style="@style/Pilula"
+                    android:paddingVertical="10dp" />
+
+                <TextView
+                    android:id="@+id/kpiTicket"
+                    style="@style/Pilula"
+                    android:layout_marginHorizontal="6dp"
+                    android:paddingVertical="10dp" />
+
+                <TextView
+                    android:id="@+id/kpiNovos"
+                    style="@style/Pilula"
+                    android:paddingVertical="10dp" />
+            </LinearLayout>
+
+            <!-- Parâmetros do motor -->
+            <LinearLayout style="@style/Secao">
+
+                <LinearLayout
+                    android:id="@+id/cabParametros"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TituloSecao"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="Parâmetros do motor" />
+
+                    <TextView
+                        android:id="@+id/setaParametros"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="▾"
+                        android:textColor="@color/texto_mut"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/SubSecao"
+                    android:text="Ajuste quanto cada critério pesa. As sugestões e os gráficos mudam na hora." />
+
+                <LinearLayout
+                    android:id="@+id/listaParametros"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- Clima -->
+            <LinearLayout style="@style/Secao">
+
+                <TextView
+                    style="@style/TituloSecao"
+                    android:text="Clima dos próximos 14 dias" />
+
+                <TextView
+                    android:id="@+id/txtClima"
+                    style="@style/SubSecao" />
+
+                <com.fruki.vendedor.ui.MapaBrasilView
+                    android:id="@+id/mapa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="mais frio"
+                        android:textColor="@color/texto_mut"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="8dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/legenda_temp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="mais quente"
+                        android:textColor="@color/texto_mut"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tituloGraficoClima"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/texto"
+                    android:textStyle="bold" />
+
+                <com.fruki.vendedor.ui.ClimaGraficoView
+                    android:id="@+id/graficoClima"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Laranja: temperatura máxima · Verde tracejado: umidade · Barras azuis: chance de chuva"
+                    android:textColor="@color/texto_mut"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Clientes -->
+            <LinearLayout
+                style="@style/Secao"
+                android:background="@drawable/bg_card_destaque">
+
+                <TextView
+                    style="@style/TituloSecao"
+                    android:text="Meus clientes" />
+
+                <TextView
+                    style="@style/SubSecao"
+                    android:text="Busque, filtre por tipo de estabelecimento e troque a sugestão de cada cliente para bater a meta." />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_inner"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/txtMeta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/texto"
+                        android:textSize="13sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progMeta"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="8dp"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_verde" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edBusca"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:autofillHints=""
+                    android:background="@drawable/bg_inner"
+                    android:hint="Buscar cliente ou cidade"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:paddingHorizontal="14dp"
+                    android:textSize="14sp" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:scrollbars="none">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chips"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:selectionRequired="true"
+                        app:singleLine="true"
+                        app:singleSelection="true" />
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/txtContagem"
+                    style="@style/SubSecao"
+                    android:layout_marginBottom="6dp" />
+
+                <LinearLayout
+                    android:id="@+id/listaClientes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- Vendas por família -->
+            <LinearLayout style="@style/Secao">
+
+                <TextView
+                    android:id="@+id/tituloVendas"
+                    style="@style/TituloSecao" />
+
+                <TextView
+                    android:id="@+id/subVendas"
+                    style="@style/SubSecao" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVoltarFamilias"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="← Voltar às famílias"
+                    android:textAllCaps="false" />
+
+                <com.fruki.vendedor.ui.BarrasView
+                    android:id="@+id/barras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtMaisVendido"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_inner"
+                        android:padding="10dp"
+                        android:textColor="@color/texto_mut"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/txtMenosVendido"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_inner"
+                        android:padding="10dp"
+                        android:textColor="@color/texto_mut"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Eventos -->
+            <LinearLayout style="@style/Secao">
+
+                <TextView
+                    style="@style/TituloSecao"
+                    android:text="Eventos e datas comemorativas" />
+
+                <TextView
+                    style="@style/SubSecao"
+                    android:text="Em laranja: faltam até 14 dias." />
+
+                <LinearLayout
+                    android:id="@+id/listaEventos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEventos"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="Protótipo com dados simulados: clima, vendas e clientes. A pontuação combina afinidade com clientes do mesmo segmento, previsão de temperatura e umidade e o próximo evento. O contorno dos estados é simplificado."
+                android:textColor="@color/texto_mut"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

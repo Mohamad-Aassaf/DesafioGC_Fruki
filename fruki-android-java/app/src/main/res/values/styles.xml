@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Pilula">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bg_pill</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:textColor">@color/fruki_verde_medio</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="Secao">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">14dp</item>
+        <item name="android:background">@drawable/bg_card</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="TituloSecao">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/fruki_verde_escuro</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SubSecao">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textColor">@color/texto_mut</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+</resources>

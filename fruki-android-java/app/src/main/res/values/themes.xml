@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Fruki" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/fruki_verde</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryContainer">@color/fruki_verde_claro</item>
+        <item name="colorOnPrimaryContainer">@color/fruki_verde_escuro</item>
+        <item name="colorSecondary">@color/fruki_verde_escuro</item>
+        <item name="colorSecondaryContainer">@color/fruki_verde_claro</item>
+        <item name="colorOnSecondaryContainer">@color/fruki_verde_escuro</item>
+        <item name="colorSurface">@color/fundo</item>
+        <item name="colorOnSurface">@color/texto</item>
+        <item name="android:colorBackground">@color/fundo</item>
+        <item name="android:windowBackground">@color/fundo</item>
+        <item name="android:textColorPrimary">@color/texto</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+    </style>
+</resources>
