@@ -16,4 +16,8 @@ export const cores = {
   trilho: '#E3EAE5',
   whatsFundo: '#ECE5DD',
   whatsBalao: '#DCF8C6',
+  /** Fundo da área de trabalho (atrás dos cartões). */
+  app: '#F2F5F3',
+  laranjaClaro: '#FFF3E8',
+  azulClaro: '#EAF2FC',
 };

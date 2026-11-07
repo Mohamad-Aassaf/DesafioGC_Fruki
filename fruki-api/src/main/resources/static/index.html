@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fruki · Motor de recomendação</title>
+<style>
+  :root {
+    --verde: #00A04A; --verde-escuro: #0B3B2C; --verde-claro: #E5F5EC; --amarelo: #F2B705;
+    --vermelho: #D7263D; --laranja: #E8742A; --azul: #3C7DD9; --roxo: #7A5AF8;
+    --fundo: #F5F8F6; --card: #FFFFFF; --borda: #E1E8E3; --texto: #1A2B22; --mut: #5F6F66;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--fundo); color: var(--texto); }
+  header { background: var(--verde-escuro); color: #fff; padding: 14px 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  header h1 { font-size: 18px; margin: 0; }
+  header .status { font-size: 13px; opacity: .85; margin-left: auto; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; display: grid; gap: 16px; }
+  section { background: var(--card); border: 1px solid var(--borda); border-radius: 12px; padding: 16px; }
+  h2 { font-size: 16px; margin: 0 0 12px; color: var(--verde-escuro); }
+  h3 { font-size: 14px; margin: 14px 0 6px; }
+  label { font-size: 13px; color: var(--mut); display: grid; gap: 4px; }
+  input, select { font: inherit; padding: 7px 9px; border: 1px solid var(--borda); border-radius: 8px; background: #fff; min-width: 0; }
+  button { font: inherit; font-weight: 600; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--verde); background: var(--verde); color: #fff; cursor: pointer; }
+  button.sec { background: #fff; color: var(--verde); }
+  .linha { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+  .linha > label { flex: 1 1 160px; }
+  .muted { color: var(--mut); font-size: 13px; }
+  .aviso { background: #FFF6DB; border-left: 4px solid var(--amarelo); padding: 6px 10px; border-radius: 6px; margin: 6px 0; font-size: 13px; }
+  .erro { background: #FDECEE; border-left: 4px solid var(--vermelho); padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+  .ok { background: var(--verde-claro); border-left: 4px solid var(--verde); padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+  .chip { background: var(--verde-claro); color: var(--verde-escuro); border-radius: 999px; padding: 2px 10px; font-size: 12px; }
+  .colunas { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+  .item { border: 1px solid var(--borda); border-radius: 10px; padding: 10px; margin-bottom: 8px; }
+  .item .topo { display: flex; justify-content: space-between; gap: 8px; }
+  .item .pts { font-weight: 700; color: var(--verde-escuro); white-space: nowrap; }
+  .barra { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #EEF2EF; margin: 6px 0; }
+  .barra span { display: block; height: 100%; }
+  .legenda { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--mut); }
+  .legenda i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--borda); }
+  th { color: var(--mut); font-weight: 600; font-size: 13px; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  pre { background: #F3F5F4; padding: 10px; border-radius: 8px; overflow: auto; font-size: 12px; max-height: 260px; }
+  a { color: var(--azul); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Fruki · Motor de recomendação</h1>
+  <span class="status" id="status">conectando à API…</span>
+</header>
+<main>
+
+  <section>
+    <h2>1. Consultar recomendação</h2>
+    <div class="linha">
+      <label>Representante <select id="vendedor"></select></label>
+      <label>Cliente <select id="cliente"></select></label>
+      <label style="flex:0 0 auto">Versão
+        <select id="versao"><option value="v2">V2 (atual)</option><option value="v1">V1 (anterior)</option></select>
+      </label>
+      <button id="consultar">Consultar</button>
+      <button class="sec" id="comparar">Comparar V1 × V2</button>
+    </div>
+    <div id="resultado"></div>
+  </section>
+
+  <section>
+    <h2>2. Indicadores da solução</h2>
+    <p class="muted">Calculados rodando o motor para todos os clientes (3 sugestões por cliente, como no app).</p>
+    <button class="sec" id="atualizarIndicadores">Atualizar</button>
+    <div id="indicadores"></div>
+  </section>
+
+  <section>
+    <h2>3. Ingestão de novos dados</h2>
+    <p class="muted">Os dados passam por validação e limpeza antes de entrar no banco. Teste com espaços extras, letras minúsculas, "super mercado", UF errada…</p>
+    <h3>Novo cliente</h3>
+    <div class="linha">
+      <label>Nome <input id="cNome" placeholder="ex.: mercado  são jorge"></label>
+      <label>Cidade <input id="cCidade" placeholder="ex.: canoas"></label>
+      <label style="flex:0 0 80px">UF <input id="cUf" placeholder="rs"></label>
+      <label>Segmento <input id="cSegmento" placeholder="ex.: super mercado"></label>
+      <label>Representante <input id="cVendedor" placeholder="opcional"></label>
+      <button id="salvarCliente">Cadastrar</button>
+    </div>
+    <h3>Nova compra</h3>
+    <div class="linha">
+      <label>Cliente <select id="kCliente"></select></label>
+      <label>Produto <select id="kProduto"></select></label>
+      <label style="flex:0 0 110px">Caixas <input id="kQtd" type="number" value="10"></label>
+      <label style="flex:0 0 160px">Data <input id="kData" type="date"></label>
+      <button id="salvarCompra">Registrar</button>
+    </div>
+    <div id="ingestao" style="margin-top:10px"></div>
+  </section>
+
+  <section>
+    <h2>Endpoints</h2>
+    <p class="muted">Lista completa e exemplos no README de <code>fruki-api</code> e na coleção do Postman em <code>fruki-api/postman</code>.
+      Atalhos: <a href="/api/status" target="_blank">/api/status</a> ·
+      <a href="/api/vendedores" target="_blank">/api/vendedores</a> ·
+      <a href="/api/produtos" target="_blank">/api/produtos</a> ·
+      <a href="/api/indicadores" target="_blank">/api/indicadores</a> ·
+      <a href="/api/eventos" target="_blank">/api/eventos</a> ·
+      <a href="/h2" target="_blank">console do banco (/h2)</a></p>
+  </section>
+</main>
+
+<script>
+const CORES = { 'Histórico e segmento': '#00A04A', 'Cesta': '#7A5AF8', 'Calor': '#E8742A', 'Umidade': '#3C7DD9', 'Eventos': '#F2B705', 'Ajuste': '#D7263D' };
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const reais = v => 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+let vendedores = [];
+
+async function api(caminho, opcoes) {
+  const r = await fetch(caminho, opcoes);
+  const corpo = await r.json().catch(() => null);
+  if (!r.ok) throw corpo || { mensagem: 'Erro ' + r.status };
+  return corpo;
+}
+
+function erroHtml(e) {
+  const det = (e.detalhes || []).map(d => '<li>' + esc(d) + '</li>').join('');
+  return '<div class="erro"><b>' + esc(e.status ? e.status + ' · ' : '') + esc(e.mensagem || e.message || e) + '</b>' + (det ? '<ul>' + det + '</ul>' : '') + '</div>';
+}
+
+async function carregar() {
+  try {
+    const s = await api('/api/status');
+    $('status').textContent = `API ok · ${s.clientes} clientes · ${s.produtos} produtos · ${s.compras} compras · clima: ${s.fonteClima}`;
+  } catch (e) { $('status').textContent = 'API fora do ar'; return; }
+  vendedores = await api('/api/vendedores');
+  const vSel = $('vendedor').value;
+  $('vendedor').innerHTML = vendedores.map(v => `<option>${esc(v.vendedor)}</option>`).join('');
+  if (vSel) $('vendedor').value = vSel;
+  preencherClientes();
+  const todos = vendedores.flatMap(v => v.clientes);
+  $('kCliente').innerHTML = todos.map(c => `<option value="${c.id}">${esc(c.nome)} (${esc(c.uf)})</option>`).join('');
+  const produtos = await api('/api/produtos');
+  $('kProduto').innerHTML = produtos.filter(p => p.ativo).map(p => `<option value="${p.id}">${esc(p.nome)}</option>`).join('');
+}
+
+function preencherClientes() {
+  const v = vendedores.find(x => x.vendedor === $('vendedor').value) || vendedores[0];
+  if (!v) return;
+  $('cliente').innerHTML = v.clientes.map(c => `<option value="${c.id}">${esc(c.nome)} · ${esc(c.segmento)} · ${esc(c.cidade)}/${esc(c.uf)}</option>`).join('');
+}
+
+function listaHtml(r) {
+  const avisos = r.avisos.map(a => `<div class="aviso">${esc(a)}</div>`).join('');
+  if (!r.recomendacoes.length) return avisos + '<p class="muted">Nenhum produto recomendado.</p>';
+  const max = Math.max(...r.recomendacoes.map(i => Object.values(i.partes).filter(v => v > 0).reduce((a, b) => a + b, 0)));
+  const itens = r.recomendacoes.map(i => {
+    const barras = Object.entries(i.partes).filter(([, v]) => v > 0)
+      .map(([k, v]) => `<span title="${esc(k)}: ${v}" style="width:${100 * v / max}%;background:${CORES[k] || '#999'}"></span>`).join('');
+    return `<div class="item"><div class="topo"><b>${i.posicao}. ${esc(i.produto)}</b><span class="pts">${i.pontos} pts</span></div>
+      <div class="muted">${esc(i.familia)} · ${reais(i.preco)}/cx</div>
+      <div class="barra">${barras}</div>
+      <div class="muted">${i.motivos.map(esc).join(' · ')}</div></div>`;
+  }).join('');
+  return avisos + itens;
+}
+
+function contextoHtml(r) {
+  const c = r.contexto, cl = r.cliente;
+  const eventos = c.eventos.map(e => `<span class="chip">${esc(e.nome)} em ${e.emDias} d</span>`).join('') || '<span class="muted">nenhum na janela</span>';
+  const legenda = Object.entries(CORES).map(([k, v]) => `<span><i style="background:${v}"></i>${esc(k)}</span>`).join('');
+  return `<h3>${esc(cl.nome)} <span class="muted">· ${esc(cl.segmento)} · ${esc(cl.cidade)}/${esc(cl.uf)} · ${cl.produtosNoHistorico} produtos no histórico</span></h3>
+    <div class="chips"><span class="chip">${c.temperaturaMedia}°C média</span><span class="chip">umidade ${c.umidadeMedia}%${c.classeUmidade ? ' (' + c.classeUmidade + ')' : ''}</span><span class="chip">clima: ${esc(c.fonteClima)}</span></div>
+    <div class="chips">${eventos}</div>
+    <div class="legenda">${legenda}</div>`;
+}
+
+async function consultar() {
+  const id = $('cliente').value, v = $('versao').value;
+  try {
+    const r = await api(`/api/clientes/${id}/recomendacoes?versao=${v}`);
+    $('resultado').innerHTML = contextoHtml(r) + `<h3>Ranking ${v.toUpperCase()}</h3>` + listaHtml(r) +
+      `<p class="muted">${r.candidatosAvaliados} produtos avaliados · ${r.descartadosPorPontuacao} abaixo da pontuação mínima · <a href="/api/clientes/${id}/recomendacoes?versao=${v}" target="_blank">ver JSON</a></p>`;
+  } catch (e) { $('resultado').innerHTML = erroHtml(e); }
+}
+
+async function comparar() {
+  const id = $('cliente').value;
+  try {
+    const [v2, v1] = await Promise.all([api(`/api/clientes/${id}/recomendacoes?versao=v2`), api(`/api/clientes/${id}/recomendacoes?versao=v1`)]);
+    $('resultado').innerHTML = contextoHtml(v2) + `<div class="colunas"><div><h3>V1 (anterior)</h3>${listaHtml(v1)}</div><div><h3>V2 (atual)</h3>${listaHtml(v2)}</div></div>`;
+  } catch (e) { $('resultado').innerHTML = erroHtml(e); }
+}
+
+async function indicadores() {
+  try {
+    const r = await api('/api/indicadores');
+    const linhas = [
+      ['Acerto no teste retroativo (compra real escondida volta no top 3)', x => `${x.acertoTop3}% de ${x.comprasTestadas}`],
+      ['Cobertura (clientes com recomendação)', x => x.cobertura + '%'],
+      ['Variedade (portfólio recomendado)', x => `${x.variedade}% (${x.produtosDistintosRecomendados} de ${x.produtosAtivos})`],
+      ['Produto mais recomendado', x => esc(x.produtoMaisRecomendado || '—')],
+      ['Concentração no mais recomendado', x => x.concentracao + '%'],
+      ['Sugestões por cliente (média)', x => x.mediaRecomendacoesPorCliente],
+      ['Potencial por cliente (1 cx de cada)', x => reais(x.potencialMedioPorCliente)],
+      ['Clientes sem histórico', x => x.clientesSemHistorico],
+      ['Taxa de recomendação (consultas com resultado)', x => x.taxaRecomendacao == null ? 'sem consultas' : `${x.taxaRecomendacao}% de ${x.consultasRegistradas}`],
+    ];
+    $('indicadores').innerHTML = '<table><tr><th>Indicador</th><th class="num">V1</th><th class="num">V2</th></tr>' +
+      linhas.map(([n, f]) => `<tr><td>${n}</td><td class="num">${f(r.v1)}</td><td class="num">${f(r.v2)}</td></tr>`).join('') + '</table>';
+  } catch (e) { $('indicadores').innerHTML = erroHtml(e); }
+}
+
+function resultadoIngestao(r) {
+  const ajustes = r.ajustes.length ? '<br>Limpeza aplicada:<ul>' + r.ajustes.map(a => '<li>' + esc(a) + '</li>').join('') + '</ul>' : '';
+  return `<div class="ok"><b>Gravado.</b>${ajustes}<pre>${esc(JSON.stringify(r.registro, null, 2))}</pre></div>`;
+}
+
+async function salvarCliente() {
+  const corpo = { nome: $('cNome').value, cidade: $('cCidade').value, uf: $('cUf').value, segmento: $('cSegmento').value, vendedor: $('cVendedor').value };
+  try {
+    const r = await api('/api/clientes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) });
+    $('ingestao').innerHTML = resultadoIngestao(r);
+    await carregar();
+  } catch (e) { $('ingestao').innerHTML = erroHtml(e); }
+}
+
+async function salvarCompra() {
+  const corpo = { clienteId: Number($('kCliente').value), produtoId: Number($('kProduto').value), quantidade: Number($('kQtd').value), data: $('kData').value || null };
+  try {
+    const r = await api('/api/compras', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) });
+    $('ingestao').innerHTML = resultadoIngestao(r);
+    await carregar();
+  } catch (e) { $('ingestao').innerHTML = erroHtml(e); }
+}
+
+$('vendedor').onchange = preencherClientes;
+$('consultar').onclick = consultar;
+$('comparar').onclick = comparar;
+$('atualizarIndicadores').onclick = indicadores;
+$('salvarCliente').onclick = salvarCliente;
+$('salvarCompra').onclick = salvarCompra;
+carregar().then(() => { consultar(); indicadores(); });
+</script>
+</body>
+</html>

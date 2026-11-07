@@ -1,10 +1,9 @@
 // Gráficos desenhados com react-native-svg.
 import React, { useState } from 'react';
 import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Circle, G, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
+import Svg, { Circle, G, Path, Rect, Text as SvgText } from 'react-native-svg';
 
-import { CONTORNOS } from '../data/dados';
-import { Dia, corTemperatura, temperaturaMedia } from '../motor/clima';
+import { Dia } from '../motor/clima';
 import { Criterio, Recomendacao } from '../motor/motor';
 import { cores } from '../theme';
 
@@ -12,45 +11,6 @@ import { cores } from '../theme';
 function useLargura(inicial = 300): [number, (e: LayoutChangeEvent) => void] {
   const [w, setW] = useState(inicial);
   return [w, e => setW(e.nativeEvent.layout.width)];
-}
-
-// ---------- Mapa do Brasil ----------
-
-const LADO = 395;
-const ESTADOS = Object.entries(CONTORNOS).map(([uf, s]) => {
-  const pts = s.split(' ').map(p => {
-    const [o, a] = p.split(',').map(Number);
-    return [(o + 74) * 9.7, (5.3 - a) * 10];
-  });
-  const cx = pts.reduce((a, p) => a + p[0], 0) / pts.length;
-  const cy = pts.reduce((a, p) => a + p[1], 0) / pts.length;
-  return { uf, pontos: pts.map(p => p.join(',')).join(' '), cx, cy };
-});
-
-export function MapaBrasil({ uf, onEstado }: { uf: string; onEstado: (uf: string) => void }) {
-  const [w, onLayout] = useLargura();
-  const lado = Math.min(w, 420);
-  const ordem = [...ESTADOS].sort((a, b) => Number(a.uf === uf) - Number(b.uf === uf));
-  return (
-    <View onLayout={onLayout} style={{ alignItems: 'center' }} accessibilityLabel="Mapa do Brasil por estado">
-      <Svg width={lado} height={lado} viewBox={`0 0 ${LADO} ${LADO}`}>
-        {ordem.map(e => (
-          <G key={e.uf} onPress={() => onEstado(e.uf)}>
-            <Polygon
-              points={e.pontos}
-              fill={corTemperatura(temperaturaMedia(e.uf))}
-              stroke={e.uf === uf ? cores.verdeEscuro : '#FFFFFF'}
-              strokeWidth={e.uf === uf ? 2.4 : 0.8}
-              strokeLinejoin="round"
-            />
-            <SvgText x={e.cx} y={e.cy + 2.5} fontSize={7.2} fontWeight="bold" fill="#FFFFFF" textAnchor="middle">
-              {e.uf}
-            </SvgText>
-          </G>
-        ))}
-      </Svg>
-    </View>
-  );
 }
 
 // ---------- Clima 14 dias ----------
@@ -175,6 +135,7 @@ export function Barras({ itens, onBarra }: BarrasProps) {
 
 export const CORES_CRITERIO: Record<Criterio, string> = {
   'Histórico e segmento': cores.verdeEscuro,
+  Cesta: '#7A5AF8',
   Calor: cores.laranja,
   Umidade: cores.azul,
   Eventos: cores.amarelo,

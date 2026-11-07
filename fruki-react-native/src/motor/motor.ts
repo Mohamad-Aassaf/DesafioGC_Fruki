@@ -32,7 +32,8 @@ export const PARAMETROS_PADRAO: Parametros = {
   metaPorCliente: 150,
 };
 
-export type Criterio = 'Histórico e segmento' | 'Calor' | 'Umidade' | 'Eventos' | 'Ajuste';
+/** 'Cesta' só aparece nas recomendações que vêm da API (motor V2). */
+export type Criterio = 'Histórico e segmento' | 'Cesta' | 'Calor' | 'Umidade' | 'Eventos' | 'Ajuste';
 
 export type Recomendacao = {
   produto: Produto;

@@ -8,6 +8,8 @@ export type Produto = {
   quente: boolean;
   /** Opção de hidratação / sem açúcar. */
   saudavel: boolean;
+  /** Preço da caixa vindo da API; sem ele, usa o preço simulado. */
+  preco?: number;
 };
 
 export type Familia = { nome: string; volume: number; produtos: Record<string, number> };
@@ -15,6 +17,8 @@ export type Familia = { nome: string; volume: number; produtos: Record<string, n
 export type Evento = { data: Date; nome: string; abrangencia: string; familias: string[] };
 
 export type Cliente = {
+  /** Id na API (só existe quando os dados vêm do servidor). */
+  id?: number;
   nome: string;
   cidade: string;
   uf: string;
@@ -62,6 +66,25 @@ const REGIOES: Record<string, string> = {
   S: 'PR SC RS',
 };
 
+export type RegiaoId = 'S' | 'SE' | 'CO' | 'NE' | 'N';
+
+/** Regiões na ordem do tour do mapa: começa pelo Sul, onde estão os principais clientes. */
+export const REGIOES_TOUR: { id: RegiaoId; nome: string; ufs: string[] }[] = [
+  { id: 'S', nome: 'Sul', ufs: ['RS', 'SC', 'PR'] },
+  { id: 'SE', nome: 'Sudeste', ufs: ['SP', 'RJ', 'MG', 'ES'] },
+  { id: 'CO', nome: 'Centro-Oeste', ufs: ['MS', 'MT', 'GO', 'DF'] },
+  { id: 'NE', nome: 'Nordeste', ufs: ['BA', 'SE', 'AL', 'PE', 'PB', 'RN', 'CE', 'PI', 'MA'] },
+  { id: 'N', nome: 'Norte', ufs: ['TO', 'PA', 'AP', 'AM', 'RR', 'RO', 'AC'] },
+];
+
+export const NOME_UF: Record<string, string> = {
+  AC: 'Acre', AL: 'Alagoas', AP: 'Amapá', AM: 'Amazonas', BA: 'Bahia', CE: 'Ceará', DF: 'Distrito Federal',
+  ES: 'Espírito Santo', GO: 'Goiás', MA: 'Maranhão', MT: 'Mato Grosso', MS: 'Mato Grosso do Sul',
+  MG: 'Minas Gerais', PA: 'Pará', PB: 'Paraíba', PR: 'Paraná', PE: 'Pernambuco', PI: 'Piauí',
+  RJ: 'Rio de Janeiro', RN: 'Rio Grande do Norte', RS: 'Rio Grande do Sul', RO: 'Rondônia', RR: 'Roraima',
+  SC: 'Santa Catarina', SP: 'São Paulo', SE: 'Sergipe', TO: 'Tocantins',
+};
+
 /** Região -> [temperatura base, umidade base]. */
 export const BASE: Record<string, [number, number]> = {
   N: [32, 85],
@@ -100,7 +123,7 @@ export const PRODUTOS: Produto[] = [
   { id: 8, nome: 'Uva 350 ml', familia: 'Refrigerante lata', quente: false, saudavel: false },
 ];
 
-export const preco = (p: Produto): number => 20 + (hash(p.nome) % 40);
+export const preco = (p: Produto): number => p.preco ?? 20 + (hash(p.nome) % 40);
 
 const ev = (d: string, nome: string, abrangencia: string, familias: string[]): Evento => ({
   data: new Date(d + 'T12:00:00'),
@@ -140,6 +163,14 @@ export const VENDEDORES: Record<string, Cliente[]> = {
     cli('Mercadinho Central', 'Salvador', 'BA', 'Mercadinho', [1, 3]),
     cli('Atacado Recife Sul', 'Recife', 'PE', 'Atacado', [1, 2, 4]),
     cli('Bar da Praça', 'Fortaleza', 'CE', 'Bar', [3]),
+  ],
+  'Rep. 34120 (SC/PR)': [
+    cli('Mercado Beira-Mar', 'Florianópolis', 'SC', 'Mercado', [1, 2, 3, 5]),
+    cli('Supermercado Araucária', 'Curitiba', 'PR', 'Supermercado', [1, 2, 3, 5, 6]),
+  ],
+  'Rep. 35200 (Sudeste e Centro-Oeste)': [
+    cli('Mercado Paulista', 'Campinas', 'SP', 'Mercado', [1, 2, 5]),
+    cli('Atacado Cerrado', 'Goiânia', 'GO', 'Atacado', [1, 2, 3, 4, 5]),
   ],
   'Rep. 30110 (Norte)': [
     cli('Mercado Rio Negro', 'Manaus', 'AM', 'Mercado', [1, 2]),

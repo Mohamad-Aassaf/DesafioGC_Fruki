@@ -1,0 +1,619 @@
+{
+  "info": {
+    "name": "Fruki · API de recomendação",
+    "description": "Rode a API (fruki-api) e use as pastas na ordem. Ajuste as variáveis clienteId e clienteSemHistoricoId conforme /api/vendedores.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "clienteId",
+      "value": "1"
+    },
+    {
+      "key": "clienteSemHistoricoId",
+      "value": "28"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Consulta da recomendação",
+      "item": [
+        {
+          "name": "Status da API",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "status"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Clientes por representante",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendedores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vendedores"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Recomendações V2 (atual)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/{{clienteId}}/recomendacoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{clienteId}}",
+                "recomendacoes"
+              ]
+            },
+            "description": "Ranking dos produtos que o cliente ainda não compra, com pontos por critério e motivos."
+          }
+        },
+        {
+          "name": "Recomendações V1 (para comparar)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/{{clienteId}}/recomendacoes?versao=v1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{clienteId}}",
+                "recomendacoes"
+              ],
+              "query": [
+                {
+                  "key": "versao",
+                  "value": "v1"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Recomendações com pesos ajustados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/{{clienteId}}/recomendacoes?bonusCalor=25&pesoHistorico=80&limite=3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{clienteId}}",
+                "recomendacoes"
+              ],
+              "query": [
+                {
+                  "key": "bonusCalor",
+                  "value": "25"
+                },
+                {
+                  "key": "pesoHistorico",
+                  "value": "80"
+                },
+                {
+                  "key": "limite",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Cliente sem histórico (cold start)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/{{clienteSemHistoricoId}}/recomendacoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{clienteSemHistoricoId}}",
+                "recomendacoes"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Indicadores e contexto",
+      "item": [
+        {
+          "name": "Indicadores V1 x V2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/indicadores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "indicadores"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Clima de uma UF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clima/RS",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clima",
+                "RS"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Próximos eventos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/eventos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "eventos"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Produtos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/produtos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "produtos"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "Compras de um cliente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/{{clienteId}}/compras",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{clienteId}}",
+                "compras"
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Ingestão",
+      "item": [
+        {
+          "name": "Novo cliente (dados sujos são limpos)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"  mercado   SÃO jorge \",\n  \"cidade\": \"porto alegre\",\n  \"uf\": \" rs \",\n  \"segmento\": \"super mercado\",\n  \"vendedor\": \"Rep. 33307 (RS)\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Novo produto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/produtos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "produtos"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Chá Mate 1L\",\n  \"familia\": \"chas e sucos\",\n  \"preco\": 27.5,\n  \"quente\": true,\n  \"saudavel\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Nova compra (sem data = hoje)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/compras",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "compras"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": \"{{clienteSemHistoricoId}}\",\n  \"produtoId\": 5,\n  \"quantidade\": 12\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Carga em lote (válidos entram, inválidos voltam no relatório)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingestao/lote",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingestao",
+                "lote"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produtos\": [\n    {\n      \"nome\": \"Guaraná Diet 600 ml\",\n      \"familia\": \"refrigerante pet\",\n      \"preco\": 33.333\n    }\n  ],\n  \"clientes\": [\n    {\n      \"nome\": \"bar do zeca\",\n      \"cidade\": \"recife\",\n      \"uf\": \"pe\",\n      \"segmento\": \"boteco\"\n    },\n    {\n      \"nome\": \"Sem UF\",\n      \"cidade\": \"Recife\",\n      \"uf\": \"\",\n      \"segmento\": \"Bar\"\n    }\n  ],\n  \"compras\": [\n    {\n      \"clienteId\": 999999,\n      \"produtoId\": 1,\n      \"quantidade\": 3\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Erros tratados",
+      "item": [
+        {
+          "name": "404 · cliente inexistente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/999999/recomendacoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "999999",
+                "recomendacoes"
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "400 · parâmetro fora da faixa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/{{clienteId}}/recomendacoes?bonusCalor=999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{clienteId}}",
+                "recomendacoes"
+              ],
+              "query": [
+                {
+                  "key": "bonusCalor",
+                  "value": "999"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "400 · versão inválida",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/{{clienteId}}/recomendacoes?versao=v9",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{clienteId}}",
+                "recomendacoes"
+              ],
+              "query": [
+                {
+                  "key": "versao",
+                  "value": "v9"
+                }
+              ]
+            },
+            "description": ""
+          }
+        },
+        {
+          "name": "400 · cliente com UF e segmento inválidos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Mercado X\",\n  \"cidade\": \"Canoas\",\n  \"uf\": \"XX\",\n  \"segmento\": \"Banco\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "400 · compra com data no futuro e produto inexistente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/compras",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "compras"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"produtoId\": 999999,\n  \"quantidade\": 5,\n  \"data\": \"2099-01-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "409 · cliente duplicado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"MERCADO PINHEIRO\",\n  \"cidade\": \"canoas\",\n  \"uf\": \"rs\",\n  \"segmento\": \"mercado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "200 · nenhuma recomendação acima da pontuação mínima",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/{{clienteId}}/recomendacoes?pontuacaoMinima=200",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "{{clienteId}}",
+                "recomendacoes"
+              ],
+              "query": [
+                {
+                  "key": "pontuacaoMinima",
+                  "value": "200"
+                }
+              ]
+            },
+            "description": ""
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Administração",
+      "item": [
+        {
+          "name": "Restaurar base de demonstração",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/restaurar-dados",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "restaurar-dados"
+              ]
+            },
+            "description": "Apaga o que foi ingerido e recarrega os dados de demonstração. Depois disso os ids mudam: confira em /api/vendedores."
+          }
+        }
+      ]
+    }
+  ]
+}
